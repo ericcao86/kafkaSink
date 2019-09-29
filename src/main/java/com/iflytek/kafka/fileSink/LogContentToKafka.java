@@ -43,13 +43,13 @@ public class LogContentToKafka extends AbstractSink implements Configurable {
             logger.info("当前日志内容"+new String(byte_message));
             //生产者
             String result = buildLogContent(new String(byte_message));
-            logger.info("json result is "+ result);
+
             ProducerRecord<String, String> record =new ProducerRecord<>(topic, result);
-            System.out.println("record is:"+record.toString());
+            System.out.println("json is:"+record.toString());
             Future<RecordMetadata> future = producer.send(record);
-            System.out.println("return future is:"+future.get().toString());
             txn.commit();
             status = Status.READY;
+            System.out.println("return topic is:"+future.get().topic());
         } catch (Throwable t) {
             txn.rollback();
             status = Status.BACKOFF;
